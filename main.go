@@ -5,36 +5,48 @@ import (
 	"syscall/js"
 )
 
-type TreeElement js.Value
-
-func checkIfElementExist(node js.Value)bool {
-    if node.Truthy() {
-        return true
+type TreeLeaf js.Value
+type TreeElement struct {
+    jsValue js.Value
+    leaf TreeLeaf
+    exist bool
+}
+func CreateTreeElement (value js.Value) *TreeElement {
+    t := new(TreeElement)
+    if !value.Truthy() {
+        t.exist = false
+        return t
     }
-    return false
+    t.exist = true
+    t.jsValue = t.jsValue
+    t.leaf = TreeLeaf(value)
+    return t
 }
 
-func convertToTreeEl(node js.Value) TreeElement {
-	return TreeElement(node)
+func GetDocument () *TreeElement {
+    t := CreateTreeElement(js.Global().Get("document"))
+    return t
 }
 
-func (node TreeElement) GetElementById (id string) TreeElement { 
-    el := js.Value(node).Call("getElementById", id)
-    return TreeElement(el)
+
+func (t TreeElement) GetElementById (id string) *TreeElement { 
+    jsDoc := t.jsValue.Call("getElementById", id)
+    return CreateTreeElement(jsDoc)
 }
-func (node TreeElement) AppendChild (child TreeElement) { 
-    js.Value(node).Call("appendChild", js.Value(child))
+func (t TreeElement) AppendChild (child TreeElement) { 
+    t.jsValue.Call("appendChild", child.jsValue)
 }
 
-func (node TreeElement) CreateElement (tag string, props []string) TreeElement { 
-    el := js.Value(node).Call("createElement", tag)
+func (t TreeElement) CreateElement (tag string, props []string) *TreeElement { 
+    jsDoc := t.jsValue.Call("createElement", tag)
     for _, prop := range props {
         propArr := strings.Split(prop, "=")
         name := propArr[0]
         value := propArr[1]
-        el.Call("setAttribute", name, value)
+        jsDoc.Call("setAttribute", name, value)
     }
-    return TreeElement(el)
+    newT := CreateTreeElement(jsDoc)
+    return newT
 }
 
 
