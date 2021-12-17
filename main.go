@@ -27,7 +27,19 @@ func GetDocument () *TreeElement {
     t := CreateTreeElement(js.Global().Get("document"))
     return t
 }
-
+func ConsoleLog(args ...interface{})  {
+    console := js.Global().Get("console")
+    if !console.Truthy() {
+        panic("window.console couldn't be fetch, make sure make sure there is a running instance of window object.")
+    }
+    if 1 > len(args){
+       console.Call("error", "ConsoleLog was expecting at least 1 argument instead got 0")
+    }
+    for _, arg :=range(args){
+        val := js.ValueOf(arg) 
+        console.Call("log",val) 
+    }
+}
 
 func (t TreeElement) GetElementById (id string) *TreeElement { 
     jsDoc := t.jsValue.Call("getElementById", id)
