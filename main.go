@@ -48,7 +48,9 @@ func (t TreeElement) GetElementById (id string) *TreeElement {
 func (t TreeElement) AppendChild (child TreeElement) { 
     t.jsValue.Call("appendChild", child.jsValue)
 }
-
+func (t TreeElement) SetClassName (class string) {
+    t.jsValue.Set("className", class)
+}
 func (t TreeElement) CreateElement (tag string, props []string) *TreeElement { 
     jsDoc := t.jsValue.Call("createElement", tag)
     for _, prop := range props {
@@ -60,6 +62,7 @@ func (t TreeElement) CreateElement (tag string, props []string) *TreeElement {
     newT := CreateTreeElement(jsDoc)
     return newT
 }
+
 
 
 
