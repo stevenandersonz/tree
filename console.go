@@ -8,15 +8,14 @@ type UIConsole struct {
 	jsValue js.Value
 	truthy bool 
 }
-func GetConsole (doc *UIDocument) *UIConsole {
-	CheckDocumentNode(doc.jsValue)
-	console := doc.jsValue.Get("console")
+func GetConsole () *UIConsole {
+	console := js.Global().Get("console")
 	uiConsole := new (UIConsole)
 	uiConsole.truthy = console.Truthy()
 	uiConsole.jsValue = console
 	return uiConsole
 }
-func (console *UIConsole) Log (msg string) {
+func (console *UIConsole) Log (msg interface{}) {
 	console.jsValue.Call("log", msg)
 }
 func (console *UIConsole) Error (msg string) {

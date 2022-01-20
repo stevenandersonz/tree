@@ -1,0 +1,18 @@
+<html>
+  <head>
+          <script>
+            var calculateFib = (n) => {
+                        return n <1 ?0 : n<=2?1: calculateFib(n-1) + calculateFib(n-2)
+                        }
+            window.onload = () => {
+                          let start = performance.now() 
+                          let fib = calculateFib(30)
+                          let elapsed = performance.now()
+                          console.log(`Took ${elapsed - start} ms to compute ${fib}`)
+                        }
+            </script>
+  </head>
+  <body>
+    <main id="main"> </main>
+    </body>
+</html>
